@@ -45,6 +45,25 @@ return {
 					show_labelDetails = true,
 				}),
 			},
+			-- 增加性能和智能程度
+			performance = {
+				debounce = 60,
+				throttle = 30,
+				fetching_timeout = 500,
+				max_view_entries = 30,
+			},
+			-- 更積極的補全觸發
+			completion = {
+				keyword_length = 1,
+				autocomplete = {
+					require("cmp.types").cmp.TriggerEvent.TextChanged,
+					require("cmp.types").cmp.TriggerEvent.InsertEnter,
+				},
+			},
+			-- 實驗性功能
+			experimental = {
+				ghost_text = true,
+			},
 			mapping = cmp.mapping.preset.insert({
 				["<C-k>"] = cmp.mapping.select_prev_item(),
 				["<C-j>"] = cmp.mapping.select_next_item(),
@@ -70,11 +89,12 @@ return {
 				end, { "i", "s" }),
 			}),
 			sources = cmp.config.sources({
-				{ name = "nvim_lsp" },
-				{ name = "nvim_lsp_signature_help" },
-				{ name = "luasnip" },
-				{ name = "buffer" },
-				{ name = "path" },
+				{ name = "copilot", priority = 1100 },
+				{ name = "nvim_lsp", priority = 1000 },
+				{ name = "nvim_lsp_signature_help", priority = 900 },
+				{ name = "luasnip", priority = 800 },
+				{ name = "buffer", priority = 500, keyword_length = 3 },
+				{ name = "path", priority = 300 },
 			}),
 			sorting = {
 				priority_weight = 2,

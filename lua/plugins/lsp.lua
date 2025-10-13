@@ -19,18 +19,27 @@ return {
 			local lspconfig = require("lspconfig")
 			-- luacheck: globals vim
 			local vim = vim
+
+			-- 設置補全能力
+			local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 			local on_attach = function(_, bufnr)
 				vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to Definition" })
 				vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover Documentation" })
 				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename Symbol" })
+				vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Go to References" })
+				vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code Action" })
 			end
 
 			-- 啟用 Mason Lspconfig，並使用 handlers 配置每個伺服器
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "cssls", "html", "jsonls", "ts_ls" },
+				ensure_installed = { "lua_ls", "cssls", "html", "jsonls", "ts_ls", "clangd", "jdtls" },
 				handlers = {
 					function(server_name)
-						lspconfig[server_name].setup({ on_attach = on_attach })
+						lspconfig[server_name].setup({
+							on_attach = on_attach,
+							capabilities = capabilities,
+						})
 					end,
 				},
 			})

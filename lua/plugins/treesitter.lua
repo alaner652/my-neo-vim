@@ -17,6 +17,9 @@ return {
 				"python",
 				"markdown",
 				"markdown_inline",
+				"c",
+				"cpp",
+				"java",
 			},
 			-- 啟用語法高亮
 			highlight = {
