@@ -1,6 +1,3 @@
--- ~/.config/nvim/lua/plugins/neo-tree.lua
--- VSCode 風格的檔案樹配置
-
 return {
 	"nvim-neo-tree/neo-tree.nvim",
 	branch = "v3.x",
@@ -35,10 +32,10 @@ return {
 					expander_highlight = "NeoTreeExpander",
 				},
 				icon = {
-					folder_closed = "",
-					folder_open = "",
-					folder_empty = "",
-					default = "*",
+					folder_closed = "",
+					folder_open = "",
+					folder_empty = "",
+					default = "",
 					highlight = "NeoTreeFileIcon",
 				},
 				modified = {
@@ -52,7 +49,6 @@ return {
 				},
 				git_status = {
 					symbols = {
-						-- VSCode 風格的 Git 符號
 						added = "",
 						modified = "",
 						deleted = "✖",
