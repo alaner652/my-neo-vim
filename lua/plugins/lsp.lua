@@ -23,12 +23,12 @@ return {
 			-- 設置補全能力
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-			local on_attach = function(_, bufnr)
-				vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = bufnr, desc = "Go to Definition" })
-				vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = bufnr, desc = "Hover Documentation" })
-				vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { buffer = bufnr, desc = "Rename Symbol" })
-				vim.keymap.set("n", "gr", vim.lsp.buf.references, { buffer = bufnr, desc = "Go to References" })
-				vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code Action" })
+			-- LSP on_attach：統一從 keymaps.lua 管理
+			local on_attach = function(client, bufnr)
+				-- 使用統一的 LSP keymap 設定
+				if _G.keymaps and _G.keymaps.setup_lsp_keymaps then
+					_G.keymaps.setup_lsp_keymaps(client, bufnr)
+				end
 			end
 
 			-- 啟用 Mason Lspconfig，並使用 handlers 配置每個伺服器

@@ -57,9 +57,10 @@ return {
 				-- 自動格式化設置
 				on_attach = function(client, bufnr)
 					if client.supports_method("textDocument/formatting") then
-						vim.keymap.set("n", "<leader>f", function()
-							vim.lsp.buf.format({ bufnr = bufnr, timeout_ms = 5000 })
-						end, { buffer = bufnr, desc = "Format buffer" })
+						-- 使用統一的格式化 keymap 設定
+						if _G.keymaps and _G.keymaps.setup_format_keymaps then
+							_G.keymaps.setup_format_keymaps(client, bufnr)
+						end
 
 						-- 保存時自動格式化
 						local augroup = vim.api.nvim_create_augroup("LspFormatting", {})

@@ -28,4 +28,4 @@ vim.opt.scrolloff = 8 -- 滾動時保持上下 8 行
 vim.opt.sidescrolloff = 8 -- 滾動時保持左右 8 列
 
 require("config.lazy")
-require("config.keymaps")
+_G.keymaps = require("config.keymaps") -- 載入快捷鍵配置並儲存到全域變數供插件使用
