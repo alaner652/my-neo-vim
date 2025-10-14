@@ -34,16 +34,18 @@ return {
 							"handlebars",
 						},
 					}),
-					null_ls.builtins.diagnostics.eslint_d,
+					-- Note: eslint_d diagnostics removed from none-ls
+					-- Use eslint LSP for JavaScript/TypeScript diagnostics instead (configured in lsp.lua)
 
 					-- Python
 					null_ls.builtins.formatting.black,
 					null_ls.builtins.formatting.isort,
-					null_ls.builtins.diagnostics.flake8,
+					-- Note: flake8 diagnostics removed from none-ls
+					-- Use pyright LSP for Python diagnostics instead (configured in lsp.lua)
 
 					-- Shell
 					null_ls.builtins.formatting.shfmt,
-					null_ls.builtins.diagnostics.shellcheck,
+					-- shellcheck 已從 none-ls 移除，建議使用 bash-language-server 的 LSP 支援
 
 					-- C/C++
 					null_ls.builtins.formatting.clang_format,
@@ -92,13 +94,11 @@ return {
 					-- JavaScript/TypeScript
 					"prettier",
 					"eslint_d",
-					-- Python
+					-- Python (diagnostics handled by pyright LSP)
 					"black",
 					"isort",
-					"flake8",
 					-- Shell
 					"shfmt",
-					"shellcheck",
 					-- C/C++
 					"clang-format",
 					-- Java

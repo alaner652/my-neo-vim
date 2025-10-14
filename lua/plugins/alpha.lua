@@ -60,19 +60,18 @@ return {
 			[[█████▓▒▓▓█▓▓▓▓▓▓▓▓▓▓███████████████████████████████████████▒░░░▒▓▓▓▒░░░░░▓▓▓▒▒░░░░░▒██████]],
 		}
 
-		-- 設置按鈕 (使用 Nerd Font Icons)
+		-- Setup buttons (using Nerd Font Icons)
 		dashboard.section.buttons.val = {
-			dashboard.button("f", "󰈞  查找文件", ":Telescope find_files <CR>"),
+			dashboard.button("f", "󰈞  找到文件", ":Telescope find_files <CR>"),
 			dashboard.button("e", "  新建文件", ":ene <BAR> startinsert <CR>"),
-			dashboard.button("r", "󰄉  最近文件", ":Telescope oldfiles <CR>"),
-			dashboard.button("g", "󰱼  查找文字", ":Telescope live_grep <CR>"),
+			dashboard.button("r", "󰄉  最近開啟", ":Telescope oldfiles <CR>"),
 			dashboard.button("c", "  配置設定", ":e $MYVIMRC <CR>"),
-			dashboard.button("l", "󰒲  Lazy 插件", ":Lazy<CR>"),
+			dashboard.button("l", "󰒲  外掛插件", ":Lazy<CR>"),
 			dashboard.button("m", "󱌣  Mason LSP", ":Mason<CR>"),
-			dashboard.button("q", "󰗼  退出程式", ":qa<CR>"),
+			dashboard.button("q", "󰗼  離開", ":qa<CR>"),
 		}
 
-		-- 設置 footer (使用 Nerd Font Icons)
+		-- Setup footer (using Nerd Font Icons)
 		local function footer()
 			local total_plugins = require("lazy").stats().count
 			local datetime = os.date("󰃭 %Y-%m-%d  󰥔 %H:%M:%S")
@@ -84,15 +83,15 @@ return {
 
 		dashboard.section.footer.val = footer()
 
-		-- 設置顏色
+		-- Setup colors
 		dashboard.section.header.opts.hl = "Include"
 		dashboard.section.buttons.opts.hl = "Keyword"
 		dashboard.section.footer.opts.hl = "Type"
 
-		-- 發送配置到 alpha
+		-- Send configuration to alpha
 		alpha.setup(dashboard.opts)
 
-		-- 禁用 folding on alpha buffer
+		-- Disable folding on alpha buffer
 		vim.cmd([[autocmd FileType alpha setlocal nofoldenable]])
 	end,
 }
