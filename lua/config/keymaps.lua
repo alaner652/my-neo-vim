@@ -18,38 +18,38 @@ local M = {}
 
 -- LSP on_attach keymaps
 M.setup_lsp_keymaps = function(_, bufnr)
-    local buf_opts = { buffer = bufnr, noremap = true, silent = true }
+	local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
-    -- LSP 導航
-    map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", buf_opts, { desc = "跳轉到定義" }))
-    map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", buf_opts, { desc = "跳轉到聲明" }))
-    map("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", buf_opts, { desc = "跳轉到實作" }))
-    map("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", buf_opts, { desc = "顯示引用" }))
-    map("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", buf_opts, { desc = "顯示文件" }))
+	-- LSP 導航
+	map("n", "gd", vim.lsp.buf.definition, vim.tbl_extend("force", buf_opts, { desc = "跳轉到定義" }))
+	map("n", "gD", vim.lsp.buf.declaration, vim.tbl_extend("force", buf_opts, { desc = "跳轉到聲明" }))
+	map("n", "gi", vim.lsp.buf.implementation, vim.tbl_extend("force", buf_opts, { desc = "跳轉到實作" }))
+	map("n", "gr", vim.lsp.buf.references, vim.tbl_extend("force", buf_opts, { desc = "顯示引用" }))
+	map("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", buf_opts, { desc = "顯示文件" }))
 
-    -- LSP 操作
-    map("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", buf_opts, { desc = "重新命名符號" }))
-    map("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", buf_opts, { desc = "程式碼操作" }))
-    map("n", "<F2>", vim.lsp.buf.rename, vim.tbl_extend("force", buf_opts, { desc = "重新命名 (F2)" }))
+	-- LSP 操作
+	map("n", "<leader>rn", vim.lsp.buf.rename, vim.tbl_extend("force", buf_opts, { desc = "重新命名符號" }))
+	map("n", "<leader>ca", vim.lsp.buf.code_action, vim.tbl_extend("force", buf_opts, { desc = "程式碼操作" }))
+	map("n", "<F2>", vim.lsp.buf.rename, vim.tbl_extend("force", buf_opts, { desc = "重新命名 (F2)" }))
 
-    -- 診斷訊息
-    map("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", buf_opts, { desc = "上一個診斷" }))
-    map("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", buf_opts, { desc = "下一個診斷" }))
-    map("n", "<leader>d", vim.diagnostic.open_float, vim.tbl_extend("force", buf_opts, { desc = "顯示診斷" }))
-    map("n", "<leader>dl", vim.diagnostic.setloclist, vim.tbl_extend("force", buf_opts, { desc = "診斷列表" }))
+	-- 診斷訊息
+	map("n", "[d", vim.diagnostic.goto_prev, vim.tbl_extend("force", buf_opts, { desc = "上一個診斷" }))
+	map("n", "]d", vim.diagnostic.goto_next, vim.tbl_extend("force", buf_opts, { desc = "下一個診斷" }))
+	map("n", "<leader>d", vim.diagnostic.open_float, vim.tbl_extend("force", buf_opts, { desc = "顯示診斷" }))
+	map("n", "<leader>dl", vim.diagnostic.setloclist, vim.tbl_extend("force", buf_opts, { desc = "診斷列表" }))
 end
 
 -- Format keymaps (for LSP/formatters with formatting capability)
 M.setup_format_keymaps = function(_, bufnr)
-    local buf_opts = { buffer = bufnr, noremap = true, silent = true }
+	local buf_opts = { buffer = bufnr, noremap = true, silent = true }
 
-    map("n", "<leader>fm", function()
-        vim.lsp.buf.format({ bufnr = bufnr, timeout_ms = 5000 })
-    end, vim.tbl_extend("force", buf_opts, { desc = "格式化檔案" }))
+	map("n", "<leader>fm", function()
+		vim.lsp.buf.format({ bufnr = bufnr, timeout_ms = 5000 })
+	end, vim.tbl_extend("force", buf_opts, { desc = "格式化檔案" }))
 
-    map("v", "<leader>fm", function()
-        vim.lsp.buf.format({ bufnr = bufnr, timeout_ms = 5000 })
-    end, vim.tbl_extend("force", buf_opts, { desc = "格式化選取" }))
+	map("v", "<leader>fm", function()
+		vim.lsp.buf.format({ bufnr = bufnr, timeout_ms = 5000 })
+	end, vim.tbl_extend("force", buf_opts, { desc = "格式化選取" }))
 end
 
 -- =====================================================
@@ -80,10 +80,18 @@ map("n", ">", ">>", opts) -- 增加縮排
 -- =====================================================
 
 -- 視窗導航（透過 vim-kitty-navigator 與 Kitty 無縫整合）
+-- 注意: Ctrl+hjkl 會被 kitty-navigator 攔截用於 Neovim <-> Kitty 切換
+-- 如果要在 Neovim 內部切換(例如到 Neo-tree),使用 Leader+w+方向鍵
 map("n", "<C-h>", "<C-w>h", opts) -- 左視窗
 map("n", "<C-j>", "<C-w>j", opts) -- 下視窗
 map("n", "<C-k>", "<C-w>k", opts) -- 上視窗
 map("n", "<C-l>", "<C-w>l", opts) -- 右視窗
+
+-- 備用視窗導航(確保在 Neovim 內部始終可用)
+map("n", "<leader>wh", "<C-w>h", opts) -- 左視窗
+map("n", "<leader>wj", "<C-w>j", opts) -- 下視窗
+map("n", "<leader>wk", "<C-w>k", opts) -- 上視窗
+map("n", "<leader>wl", "<C-w>l", opts) -- 右視窗
 
 -- 分割視窗（使用 Leader 鍵）
 map("n", "<leader>v", "<cmd>vsplit<cr>", opts) -- 垂直分割
