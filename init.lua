@@ -29,3 +29,11 @@ vim.opt.sidescrolloff = 8 -- Keep 8 columns left/right of cursor
 
 require("config.lazy")
 _G.keymaps = require("config.keymaps") -- Load keymaps config and store globally for plugins
+
+-- Set custom highlight for snacks dashboard
+vim.api.nvim_create_autocmd("ColorScheme", {
+    callback = function()
+        vim.api.nvim_set_hl(0, "SnacksDashboardTerminal", { fg = "#a6e3a1" }) -- Light green for ASCII art
+    end,
+})
+vim.api.nvim_set_hl(0, "SnacksDashboardTerminal", { fg = "#a6e3a1" }) -- Light green for ASCII art
