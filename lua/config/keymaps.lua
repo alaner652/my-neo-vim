@@ -4,7 +4,7 @@
 -- 設計理念：
 -- 1. 避免與終端衝突的快捷鍵（Ctrl+A/Z/F 等）
 -- 2. 以 Leader 鍵（Space）為核心
--- 3. Ctrl+hjkl 與 Kitty 無縫整合
+-- 3. 保留 Vim 原生 Ctrl+w 視窗導覽
 -- 4. 簡單直觀，易於記憶
 -- =====================================================
 
@@ -53,20 +53,12 @@ M.setup_format_keymaps = function(_, bufnr)
 end
 
 -- =====================================================
--- 基本編輯操作
--- =====================================================
-
--- 檔案操作
-map("n", "<C-s>", "<cmd>w<cr>", opts) -- 儲存
-map("i", "<C-s>", "<Esc><cmd>w<cr>a", opts) -- 插入模式儲存
-map("n", "<leader>w", "<cmd>w<cr>", opts) -- Leader+w 儲存
-map("n", "<leader>Q", "<cmd>qa!<cr>", opts) -- Leader+Q 強制離開全部
-
--- 基本編輯
-map("n", "<leader>a", "ggVG", opts) -- 全選
-
--- 搜尋
-map("n", "<leader>s", "/", { noremap = true, desc = "搜尋" })
+-- 基本編輯操作（避免 Leader 前綴衝突）
+-- 使用 <leader>f* 管理檔案相關操作，防止與視窗快捷鍵互搶時序
+map("n", "<leader>fs", "<cmd>w<cr>", opts) -- 儲存檔案
+map("n", "<leader>fq", "<cmd>q<cr>", opts) -- 關閉目前視窗
+map("n", "<leader>fQ", "<cmd>qa!<cr>", opts) -- 強制離開全部
+map("n", "<leader>sa", "ggVG", opts) -- 全選（Select All）
 map("n", "<Esc>", "<cmd>noh<cr>", opts) -- 清除高亮
 
 -- 縮排
@@ -76,18 +68,10 @@ map("n", "<", "<<", opts) -- 減少縮排
 map("n", ">", ">>", opts) -- 增加縮排
 
 -- =====================================================
--- 視窗管理（與 Kitty 整合）
+-- 視窗管理
 -- =====================================================
 
--- 視窗導航（透過 vim-kitty-navigator 與 Kitty 無縫整合）
--- 注意: Ctrl+hjkl 會被 kitty-navigator 攔截用於 Neovim <-> Kitty 切換
--- 如果要在 Neovim 內部切換(例如到 Neo-tree),使用 Leader+w+方向鍵
-map("n", "<C-h>", "<C-w>h", opts) -- 左視窗
-map("n", "<C-j>", "<C-w>j", opts) -- 下視窗
-map("n", "<C-k>", "<C-w>k", opts) -- 上視窗
-map("n", "<C-l>", "<C-w>l", opts) -- 右視窗
-
--- 備用視窗導航(確保在 Neovim 內部始終可用)
+-- Leader 視窗導航（保留 Neovim 原生 Ctrl+W 鍵位）
 map("n", "<leader>wh", "<C-w>h", opts) -- 左視窗
 map("n", "<leader>wj", "<C-w>j", opts) -- 下視窗
 map("n", "<leader>wk", "<C-w>k", opts) -- 上視窗
@@ -106,61 +90,27 @@ map("n", "<leader><", "<cmd>vertical resize -5<cr>", opts) -- 減小寬度
 map("n", "<leader>>", "<cmd>vertical resize +5<cr>", opts) -- 增加寬度
 
 -- =====================================================
--- Buffer/Tab 管理（簡化版）
+-- Buffer 管理
 -- =====================================================
 
--- Buffer 切換（使用 Vim 風格快捷鍵）
 map("n", "]b", "<cmd>BufferLineCycleNext<cr>", { desc = "下一個 buffer" })
 map("n", "[b", "<cmd>BufferLineCyclePrev<cr>", { desc = "上一個 buffer" })
-map("n", "<leader>c", "<cmd>bdelete<cr>", { desc = "關閉目前 buffer" })
-map("n", "<leader>C", "<cmd>BufferLineCloseOthers<cr>", { desc = "關閉其他 buffer" })
-
--- Buffer 跳轉（只保留 Leader+數字，更可靠）
-map("n", "<leader>1", "<cmd>BufferLineGoToBuffer 1<cr>", { desc = "跳到 buffer 1" })
-map("n", "<leader>2", "<cmd>BufferLineGoToBuffer 2<cr>", { desc = "跳到 buffer 2" })
-map("n", "<leader>3", "<cmd>BufferLineGoToBuffer 3<cr>", { desc = "跳到 buffer 3" })
-map("n", "<leader>4", "<cmd>BufferLineGoToBuffer 4<cr>", { desc = "跳到 buffer 4" })
-map("n", "<leader>5", "<cmd>BufferLineGoToBuffer 5<cr>", { desc = "跳到 buffer 5" })
-map("n", "<leader>6", "<cmd>BufferLineGoToBuffer 6<cr>", { desc = "跳到 buffer 6" })
-map("n", "<leader>7", "<cmd>BufferLineGoToBuffer 7<cr>", { desc = "跳到 buffer 7" })
-map("n", "<leader>8", "<cmd>BufferLineGoToBuffer 8<cr>", { desc = "跳到 buffer 8" })
-map("n", "<leader>9", "<cmd>BufferLineGoToBuffer 9<cr>", { desc = "跳到 buffer 9" })
-
--- Buffer 排序
-map("n", "<leader>bp", "<cmd>BufferLineTogglePin<cr>", { desc = "釘選/取消釘選 buffer" })
-map("n", "<leader>bh", "<cmd>BufferLineCloseLeft<cr>", { desc = "關閉左側 buffers" })
-map("n", "<leader>bl", "<cmd>BufferLineCloseRight<cr>", { desc = "關閉右側 buffers" })
+map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "關閉目前 buffer" })
+map("n", "<leader>bo", "<cmd>BufferLineCloseOthers<cr>", { desc = "關閉其他 buffer" })
 
 -- =====================================================
 -- 檔案操作（Telescope - 以 Leader 鍵為主）
 -- =====================================================
 
--- 主要操作（保留 Ctrl+P 作為特例，因為常用且不衝突）
-map("n", "<C-p>", "<cmd>Telescope find_files<cr>", { desc = "快速開啟檔案" })
+-- 主要操作（統一使用 Leader）
 map("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "尋找檔案" })
 map("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", { desc = "全域搜尋" })
 map("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Buffer 列表" })
 map("n", "<leader>fr", "<cmd>Telescope oldfiles<cr>", { desc = "最近檔案" })
-map("n", "<leader>fh", "<cmd>Telescope help_tags<cr>", { desc = "說明文件" })
-map("n", "<leader>fc", "<cmd>Telescope commands<cr>", { desc = "指令列表" })
 
--- 側邊欄（保留 Ctrl+B，因為與 Kitty 不衝突）
-map("n", "<C-b>", "<cmd>Neotree toggle<cr>", { desc = "切換側邊欄" })
-map("n", "<leader>e", "<cmd>Neotree focus<cr>", { desc = "聚焦側邊欄" })
+-- 側邊欄
+map("n", "<leader>e", "<cmd>Neotree toggle<cr>", { desc = "切換側邊欄" })
 map("n", "<leader>E", "<cmd>Neotree reveal<cr>", { desc = "在側邊欄中定位目前檔案" })
-
--- =====================================================
--- 行操作（簡化版）
--- =====================================================
-
--- 移動行（使用 Alt 鍵避免與終端衝突）
-map("n", "<A-j>", ":m .+1<cr>==", opts) -- 向下移動行
-map("n", "<A-k>", ":m .-2<cr>==", opts) -- 向上移動行
-map("v", "<A-j>", ":m '>+1<cr>gv=gv", opts) -- 向下移動選取行
-map("v", "<A-k>", ":m '<-2<cr>gv=gv", opts) -- 向上移動選取行
-
--- 複製行
-map("n", "<leader>dd", "yyp", { desc = "複製目前行" })
 
 -- =====================================================
 -- 註解（統一使用 Leader 鍵）
@@ -168,21 +118,6 @@ map("n", "<leader>dd", "yyp", { desc = "複製目前行" })
 -- 需要 Comment.nvim 外掛
 map("n", "<leader>/", "gcc", { remap = true, desc = "切換註解" })
 map("v", "<leader>/", "gc", { remap = true, desc = "切換註解" })
-
--- =====================================================
--- 其他實用操作
--- =====================================================
-
--- 貼上改進
-map("v", "p", '"_dP', opts) -- 貼上不覆蓋暫存器
-
--- 快速離開插入模式
-map("i", "jk", "<Esc>", opts) -- jk 離開插入模式
-
--- 分割視窗下的終端機
-map("n", "<leader>tt", "<cmd>split | terminal<cr>", { desc = "開啟終端機" })
-map("n", "<leader>tv", "<cmd>vsplit | terminal<cr>", { desc = "垂直終端機" })
-map("t", "<Esc><Esc>", "<C-\\><C-n>", opts) -- 終端模式下雙擊 Esc 離開
 
 -- =====================================================
 -- Export Module (for plugin use)

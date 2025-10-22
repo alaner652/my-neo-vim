@@ -50,10 +50,25 @@ local snakes_ascii = [[
 	██████▒▒▓█▓▓▓▓▓▓▓▓▓▓████████████████████████████████████▓░░░░▒▓▓▒░░░░░░░░░▓█▓▓▒░░▒▓▓██████
 ]]
 
+local function remove_duplicate_docs()
+	local doc_dir = vim.fn.stdpath("data") .. "/lazy/snacks.nvim/doc"
+	local duplicate = doc_dir .. "/snacks.nvim-animate.txt"
+	local keep = doc_dir .. "/snacks-animate.txt"
+	local uv = vim.uv or vim.loop
+	if not uv then
+		return
+	end
+	if uv.fs_stat(duplicate) and uv.fs_stat(keep) then
+		pcall(vim.fn.delete, duplicate)
+	end
+end
+
 return {
     "folke/snacks.nvim",
     priority = 1000,
     lazy = false,
+    init = remove_duplicate_docs,
+    build = remove_duplicate_docs,
     opts = {
         -- Enable these features
         bigfile = { enabled = true },
